@@ -38,8 +38,23 @@ def balance_teams(cleaned_players, raw_teams):
     return balanced_teams
 
 
+def display_team(balanced_teams, team_name):
+    team = balanced_teams[team_name]
+    print(f"Team {team_name} Stats")
+    print("--------------------")
+    print(f"Total players: {len(team)}")
+    print(f"Total experienced: {len([player for player in team if player['experience'] == True]) }")
+    print(f"Total experienced: {len([player for player in team if player['experience'] == False]) }")
+    heights = [player['height'] for player in team]
+    print(f"Average height: {round(sum(heights)/len(heights),1)}")
+    print("\nPlayers on team:")
+    print(", ".join([player['name'] for player in team]))
+    print("\nGuardians:")
+    print(", ".join([", ".join(player['guardian']) for player in team]))
+
+
 if __name__ == '__main__':
     players = clean_data(PLAYERS)
     teams = balance_teams(players, TEAMS)
-
+    display_team(teams, 'Panthers')
 
