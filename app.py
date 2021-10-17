@@ -17,18 +17,26 @@ def clean_data(raw_players):
 
 
 def balance_teams(cleaned_players, raw_teams):
-    # order players by experience and then height
-    all_players = sorted(cleaned_players, key=lambda d: (d['experience'], d['height']), reverse=True)
+    # order players by experience
+    all_players = sorted(cleaned_players, key=lambda d: (d['experience']), reverse=True)
 
     # then sort evenly into teams
     balanced_teams = {}
     for team_name in raw_teams:
-        balanced_teams[team_name] = []
+        balanced_teams[team_name] = {}
+        balanced_teams[team_name]['players'] = []
 
     while len(all_players) > 0:
         for team_name in raw_teams:
-            balanced_teams[team_name].append(all_players.pop(0))
+            balanced_teams[team_name]['players'].append(all_players.pop(0))
 
+    for team_name in raw_teams:
+        team = balanced_teams[team_name]
+        team['players'] = sorted(team['players'], key=lambda d: (d['height']), reverse=True)
+        team['experienced'] = len([player for player in team['players'] if player['experience']])
+        team['inexperienced'] = len([player for player in team['players'] if player['experience'] is False])
+        heights = [player['height'] for player in team['players']]
+        team['avg_height'] = round(sum(heights) / len(heights), 1)
     return balanced_teams
 
 
@@ -36,15 +44,14 @@ def display_team(balanced_teams, team_name):
     team = balanced_teams[team_name]
     print(f"Team {team_name} Stats")
     print("--------------------")
-    print(f"Total players: {len(team)}")
-    print(f"Total experienced: {len([player for player in team if player['experience'] == True]) }")
-    print(f"Total experienced: {len([player for player in team if player['experience'] == False]) }")
-    heights = [player['height'] for player in team]
-    print(f"Average height: {round(sum(heights)/len(heights),1)}")
+    print(f"Total players: {len(team['players'])}")
+    print(f"Total experienced: {team['experienced']}")
+    print(f"Total inexperienced: {team['inexperienced']}")
+    print(f"Average height: {team['avg_height']}")
     print("\nPlayers on team:")
-    print(", ".join([f"{player['name']} ({player['height']})" for player in team]))
+    print(", ".join([f"{player['name']} ({player['height']})" for player in team['players']]))
     print("\nGuardians:")
-    print(", ".join([", ".join(player['guardian']) for player in team]))
+    print(", ".join([", ".join(player['guardian']) for player in team['players']]))
 
 
 def show_menu():
