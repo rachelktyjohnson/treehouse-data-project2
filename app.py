@@ -17,15 +17,8 @@ def clean_data(raw_players):
 
 
 def balance_teams(cleaned_players, raw_teams):
-    # split players into experienced and inexperienced and then recombine
-    exp_players = []
-    inexp_players = []
-    for player in cleaned_players:
-        if player['experience']:
-            exp_players.append(player)
-        else:
-            inexp_players.append(player)
-    all_players = exp_players + inexp_players
+    # order players by experience and then height
+    all_players = sorted(cleaned_players, key=lambda d: (d['experience'], d['height']), reverse=True)
 
     # then sort evenly into teams
     balanced_teams = {}
@@ -49,7 +42,7 @@ def display_team(balanced_teams, team_name):
     heights = [player['height'] for player in team]
     print(f"Average height: {round(sum(heights)/len(heights),1)}")
     print("\nPlayers on team:")
-    print(", ".join([player['name'] for player in team]))
+    print(", ".join([f"{player['name']} ({player['height']})" for player in team]))
     print("\nGuardians:")
     print(", ".join([", ".join(player['guardian']) for player in team]))
 
