@@ -1,5 +1,6 @@
 from constants import TEAMS, PLAYERS
-import pprint
+from time import sleep
+
 
 def clean_data(raw_players):
     clean_players = []
@@ -53,8 +54,46 @@ def display_team(balanced_teams, team_name):
     print(", ".join([", ".join(player['guardian']) for player in team]))
 
 
+def show_menu():
+    running = True
+    while running:
+        print("\n---- MENU----\n")
+        print("Here are your choice:")
+        print("A) Display Team Stats")
+        print("B) Quit")
+        menu_option = input("Please enter an option (A/B): ")
+        while menu_option not in ['A', 'B']:
+            menu_option = input("Please enter an option (A/B): ")
+        if menu_option == 'B':
+            running = False
+        else:
+            print("\nWhat team do you want to view the stats of?\n")
+            print("A) Panthers")
+            print("B) Bandits")
+            print("C) Warriors")
+            team_option = input("Please enter an option (A/B/C): ")
+            while team_option not in ['A', 'B', 'C']:
+                team_option = input("Please enter an option (A/B/C): ")
+            if team_option == 'A':
+                display_team(teams, 'Panthers')
+            elif team_option == 'B':
+                display_team(teams, 'Bandits')
+            else:
+                display_team(teams, 'Warriors')
+
+            input("\nPress ENTER to continue...\n")
+
+
 if __name__ == '__main__':
+    print("└[∵┌]└[ ∵ ]┘[┐∵]┘")
+    print("Welcome to the Basketball Team Stats Tool!")
+    sleep(0.5)
+    print("Cleaning data...")
+    sleep(0.5)
+    print("Balancing teams...")
+    sleep(0.5)
+
     players = clean_data(PLAYERS)
     teams = balance_teams(players, TEAMS)
-    display_team(teams, 'Panthers')
-
+    show_menu()
+    print("Thanks for using the Basketball Team Stats Tool!")
